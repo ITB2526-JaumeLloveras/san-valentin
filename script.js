@@ -1,10 +1,5 @@
 // ==================== CONFIGURACIÓN ====================
-const CORRECT_PASSWORD = "1423"; // Cambia esta contraseña
-const LOCK_DAYS = 20;
-
-// ==================== VARIABLES GLOBALES ====================
-let timerInterval = null;
-let lockedTimerInterval = null;
+const CORRECT_PASSWORD = "122333444455555"; // Cambia esta contraseña
 
 // ==================== NAVEGACIÓN ENTRE PANTALLAS ====================
 function nextScreen(screenNumber) {
@@ -31,23 +26,31 @@ function showYesScreen() {
     createConfetti();
 }
 
+function showConfirmScreen() {
+    document.querySelectorAll('.screen').forEach(screen => {
+        screen.classList.remove('active');
+    });
+    document.getElementById('confirmScreen').classList.add('active');
+}
+
+function showMovingButtonScreen() {
+    document.querySelectorAll('.screen').forEach(screen => {
+        screen.classList.remove('active');
+    });
+    document.getElementById('movingButtonScreen').classList.add('active');
+    
+    // Inicializar el botón que se mueve
+    setTimeout(() => {
+        initMovingButton();
+    }, 500);
+}
+
 function showCancelScreen() {
     document.querySelectorAll('.screen').forEach(screen => {
         screen.classList.remove('active');
     });
     document.getElementById('cancelScreen').classList.add('active');
     closeModal();
-}
-
-function showLockedScreen() {
-    document.querySelectorAll('.screen').forEach(screen => {
-        screen.classList.remove('active');
-    });
-    document.getElementById('lockedScreen').classList.add('active');
-    closeModal();
-    
-    // Iniciar cronómetro de la pantalla bloqueada
-    startLockedScreenTimer();
 }
 
 function showNoScreen() {
@@ -58,104 +61,77 @@ function showNoScreen() {
     closeModal();
 }
 
-// ==================== SISTEMA DE BLOQUEO ====================
-function checkLockStatus() {
-    const lockUntil = localStorage.getItem('lockUntil');
+// ==================== BOTÓN QUE SE MUEVE ====================
+function initMovingButton() {
+    const movingBtn = document.getElementById('movingNoBtn');
+    if (!movingBtn) return;
     
-    if (lockUntil) {
-        const now = new Date().getTime();
-        const lockTime = parseInt(lockUntil);
-        
-        if (now < lockTime) {
-            return {
-                isLocked: true,
-                lockTime: lockTime
-            };
-        } else {
-            localStorage.removeItem('lockUntil');
-            localStorage.removeItem('attemptUsed');
+    let moveCount = 0;
+    const maxMoves = 15; // Después de 15 intentos, permitir hacer clic
+    
+    function moveButton() {
+        if (moveCount >= maxMoves) {
+            // Después de 15 intentos, permitir hacer clic
+            movingBtn.style.position = 'relative';
+            movingBtn.onclick = showPasswordModal;
+            movingBtn.textContent = 'NO (¡Lo lograste!)';
+            return;
         }
+        
+        const container = movingBtn.parentElement;
+        const containerRect = container.getBoundingClientRect();
+        const btnRect = movingBtn.getBoundingClientRect();
+        
+        // Calcular posición aleatoria
+        const maxX = containerRect.width - btnRect.width - 40;
+        const maxY = containerRect.height - btnRect.height - 40;
+        
+        const randomX = Math.random() * maxX;
+        const randomY = Math.random() * maxY;
+        
+        movingBtn.style.position = 'absolute';
+        movingBtn.style.left = randomX + 'px';
+        movingBtn.style.top = randomY + 'px';
+        
+        moveCount++;
     }
     
-    return { isLocked: false };
-}
-
-// ==================== CRONÓMETRO ====================
-function updateTimer(lockTime, prefix = '') {
-    const now = new Date().getTime();
-    const distance = lockTime - now;
+    // Mover el botón cuando el cursor se acerca
+    movingBtn.addEventListener('mouseenter', moveButton);
+    movingBtn.addEventListener('touchstart', (e) => {
+        e.preventDefault();
+        moveButton();
+    });
     
-    if (distance < 0) {
-        clearInterval(timerInterval);
-        localStorage.removeItem('lockUntil');
-        localStorage.removeItem('attemptUsed');
-        location.reload();
-        return;
-    }
-    
-    const days = Math.floor(distance / (1000 * 60 * 60 * 24));
-    const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-    const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-    const seconds = Math.floor((distance % (1000 * 60)) / 1000);
-    
-    const daysEl = document.getElementById(prefix + 'days');
-    const hoursEl = document.getElementById(prefix + 'hours');
-    const minutesEl = document.getElementById(prefix + 'minutes');
-    const secondsEl = document.getElementById(prefix + 'seconds');
-    
-    if (daysEl) daysEl.textContent = String(days).padStart(2, '0');
-    if (hoursEl) hoursEl.textContent = String(hours).padStart(2, '0');
-    if (minutesEl) minutesEl.textContent = String(minutes).padStart(2, '0');
-    if (secondsEl) secondsEl.textContent = String(seconds).padStart(2, '0');
-}
-
-function startLockedScreenTimer() {
-    const lockStatus = checkLockStatus();
-    if (lockStatus.isLocked) {
-        updateTimer(lockStatus.lockTime, 'locked');
-        lockedTimerInterval = setInterval(() => {
-            updateTimer(lockStatus.lockTime, 'locked');
-        }, 1000);
-    }
+    // También mover al intentar hacer clic
+    movingBtn.addEventListener('click', (e) => {
+        if (moveCount < maxMoves) {
+            e.preventDefault();
+            moveButton();
+        }
+    });
 }
 
 // ==================== MODAL DE CONTRASEÑA ====================
 function showPasswordModal() {
-    const lockStatus = checkLockStatus();
     const modal = document.getElementById('passwordModal');
-    const passwordSection = document.getElementById('passwordSection');
-    const timerSection = document.getElementById('timerSection');
     const passwordInput = document.getElementById('passwordInput');
     const errorMessage = document.getElementById('errorMessage');
     
-    if (lockStatus.isLocked) {
-        // Mostrar cronómetro
-        passwordSection.style.display = 'none';
-        timerSection.style.display = 'block';
-        
-        updateTimer(lockStatus.lockTime);
-        timerInterval = setInterval(() => {
-            updateTimer(lockStatus.lockTime);
-        }, 1000);
-    } else {
-        // Mostrar campo de contraseña
-        passwordSection.style.display = 'block';
-        timerSection.style.display = 'none';
-        passwordInput.value = '';
-        errorMessage.classList.remove('show');
-    }
+    passwordInput.value = '';
+    errorMessage.classList.remove('show');
     
     modal.classList.add('active');
+    
+    // Enfocar el input después de un pequeño delay
+    setTimeout(() => {
+        passwordInput.focus();
+    }, 300);
 }
 
 function closeModal() {
     const modal = document.getElementById('passwordModal');
     modal.classList.remove('active');
-    
-    if (timerInterval) {
-        clearInterval(timerInterval);
-        timerInterval = null;
-    }
 }
 
 // ==================== VERIFICACIÓN DE CONTRASEÑA ====================
@@ -170,15 +146,13 @@ function verifyPassword() {
     }
     
     if (enteredPassword === CORRECT_PASSWORD) {
-        // Contraseña correcta
+        // Contraseña correcta - mostrar pantalla de "NO"
         showNoScreen();
     } else {
-        // Contraseña incorrecta - bloquear
-        const lockUntil = new Date().getTime() + (LOCK_DAYS * 24 * 60 * 60 * 1000);
-        localStorage.setItem('lockUntil', lockUntil);
-        localStorage.setItem('attemptUsed', 'true');
-        
-        showLockedScreen();
+        // Contraseña incorrecta - pueden intentar de nuevo
+        showError('❌ Contraseña incorrecta. Intenta de nuevo');
+        passwordInput.value = '';
+        passwordInput.focus();
     }
 }
 
@@ -231,7 +205,7 @@ function createConfetti() {
     }
     
     // Confeti continuo
-    setInterval(() => {
+    const confettiInterval = setInterval(() => {
         for (let i = 0; i < 3; i++) {
             const confetti = document.createElement('div');
             confetti.style.position = 'fixed';
@@ -259,15 +233,6 @@ function createConfetti() {
 
 // ==================== EVENT LISTENERS ====================
 document.addEventListener('DOMContentLoaded', function() {
-    // Verificar si está bloqueado al cargar
-    const lockStatus = checkLockStatus();
-    if (lockStatus.isLocked) {
-        const noBtn = document.getElementById('noBtn');
-        if (noBtn) {
-            noBtn.style.opacity = '0.7';
-        }
-    }
-    
     // Botón verificar contraseña
     const submitPassword = document.getElementById('submitPassword');
     if (submitPassword) {
@@ -299,10 +264,4 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
     }
-});
-
-// ==================== LIMPIAR INTERVALOS AL SALIR ====================
-window.addEventListener('beforeunload', () => {
-    if (timerInterval) clearInterval(timerInterval);
-    if (lockedTimerInterval) clearInterval(lockedTimerInterval);
 });

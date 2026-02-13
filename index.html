@@ -48,10 +48,53 @@
                 <button id="yesBtn" class="btn yes-btn" onclick="showYesScreen()">
                     SÍ😍
                 </button>
-                <button id="noBtn" class="btn no-btn" onclick="showPasswordModal()">
+                <button id="noBtn" class="btn no-btn" onclick="showConfirmScreen()">
                     NO☝️🤓
                 </button>
             </div>
+        </div>
+    </div>
+
+    <!-- Pantalla 4: ¿Estás segura? -->
+    <div id="confirmScreen" class="screen">
+        <div class="content">
+            <div class="gif-container fade-in">
+                <img src="https://media.tenor.com/gUiu1zyxfzYAAAAi/bear-kiss-bear-kisses.gif" alt="cute bear" class="cute-gif">
+            </div>
+            <h2 class="fade-in delay-1">🤔 ¿Estás segura?</h2>
+            <p class="fade-in delay-2">Piénsalo bien... ¿de verdad quieres decir que no?</p>
+            <p class="fade-in delay-3">Sabes que me harías muy feliz si dices que SÍ 🥺</p>
+            
+            <div class="buttons-container fade-in delay-4">
+                <button class="btn yes-btn" onclick="showYesScreen()">
+                    Tienes razón, SÍ quiero 💕
+                </button>
+                <button class="btn secondary-btn" onclick="showMovingButtonScreen()">
+                    Sigo pensando que no...
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Pantalla 5: Botón que se mueve -->
+    <div id="movingButtonScreen" class="screen">
+        <div class="content">
+            <div class="gif-container fade-in">
+                <img src="https://media.tenor.com/gUiu1zyxfzYAAAAi/bear-kiss-bear-kisses.gif" alt="cute bear" class="cute-gif">
+            </div>
+            <h2 class="fade-in delay-1">😏 ¿Segura segura?</h2>
+            <p class="fade-in delay-2">Intenta hacer clic en el botón "NO" si te atreves...</p>
+            
+            <div class="moving-buttons-container fade-in delay-3">
+                <button class="btn yes-btn" onclick="showYesScreen()">
+                    Mejor digo SÍ 💖
+                </button>
+                <button id="movingNoBtn" class="btn no-btn moving-btn">
+                    NO
+                </button>
+            </div>
+            
+            <p class="hint-text fade-in delay-4">Si logras hacer clic, te dejaré poner la contraseña 😉</p>
         </div>
     </div>
 
@@ -60,11 +103,11 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h2>NO PUEDES😁</h2>
-                <p class="modal-subtitle">Adivina la contrasenya y me lo pienso</p>
+                <p class="modal-subtitle">Adivina la contraseña y me lo pienso</p>
             </div>
             
-            <div id="passwordSection" class="password-section">
-                <p class="password-hint">Introduce el numero</p>
+            <div class="password-section">
+                <p class="password-hint">Introduce el número</p>
                 <input type="number" id="passwordInput" placeholder="?????" maxlength="6" class="password-input">
                 <p id="errorMessage" class="error-message"></p>
                 
@@ -76,37 +119,6 @@
                         Mejor no💕💕
                     </button>
                 </div>
-            </div>
-
-            <div id="timerSection" class="timer-section" style="display: none;">
-                <p class="lock-message">Perdiste la oportunidad🤗 Te tocara aguantarme💋💋</p>
-                <p class="lock-subtitle">Te dejo otra opcion en😉:</p>
-                
-                <div class="timer-display">
-                    <div class="time-box">
-                        <span class="time-number" id="days">00</span>
-                        <span class="time-label">Días</span>
-                    </div>
-                    <span class="time-separator">:</span>
-                    <div class="time-box">
-                        <span class="time-number" id="hours">00</span>
-                        <span class="time-label">Horas</span>
-                    </div>
-                    <span class="time-separator">:</span>
-                    <div class="time-box">
-                        <span class="time-number" id="minutes">00</span>
-                        <span class="time-label">Min</span>
-                    </div>
-                    <span class="time-separator">:</span>
-                    <div class="time-box">
-                        <span class="time-number" id="seconds">00</span>
-                        <span class="time-label">Seg</span>
-                    </div>
-                </div>
-                
-                <button class="btn modal-btn secondary" onclick="closeModal()">
-                    Cerrar
-                </button>
             </div>
         </div>
     </div>
@@ -149,52 +161,6 @@
             
             <button class="btn yes-btn big-btn fade-in delay-5" onclick="showYesScreen()">
                 ¡SÍ QUIERO SER TU VALENTÍN! 💖
-            </button>
-        </div>
-    </div>
-
-    <!-- Pantalla de Bloqueado -->
-    <div id="lockedScreen" class="screen locked-screen">
-        <div class="content">
-            <div class="gif-container fade-in">
-                <img src="https://media.tenor.com/wpSu4BTDzOEAAAAi/sad-cry.gif" alt="sad" class="cute-gif">
-            </div>
-            <h1 class="fade-in delay-1 error-title">No tuviste suerte❌</h1>
-            <p class="fade-in delay-2">Has sido bloqueado por 20 días 🔒</p>
-            
-            <div class="timer-container fade-in delay-3">
-                <p class="timer-title">Tiempo restante:</p>
-                <div class="timer-display">
-                    <div class="time-box">
-                        <span class="time-number" id="lockedDays">00</span>
-                        <span class="time-label">Días</span>
-                    </div>
-                    <span class="time-separator">:</span>
-                    <div class="time-box">
-                        <span class="time-number" id="lockedHours">00</span>
-                        <span class="time-label">Horas</span>
-                    </div>
-                    <span class="time-separator">:</span>
-                    <div class="time-box">
-                        <span class="time-number" id="lockedMinutes">00</span>
-                        <span class="time-label">Min</span>
-                    </div>
-                    <span class="time-separator">:</span>
-                    <div class="time-box">
-                        <span class="time-number" id="lockedSeconds">00</span>
-                        <span class="time-label">Seg</span>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="warning-card fade-in delay-4">
-                <p>⚠️ Solo tenías un intento</p>
-                <p>💔 ¿De verdad querías decir que no?</p>
-                <p>Tendrias que haber dicho que si desde el inicio🤗</p>
-            </div>
-            
-            <button class="btn secondary-btn fade-in delay-5" onclick="location.reload()">
-                Volver al inicio
             </button>
         </div>
     </div>

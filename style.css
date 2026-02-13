@@ -89,6 +89,7 @@ body {
     padding: 50px 40px;
     border-radius: 30px;
     box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+    position: relative;
 }
 
 /* Pantallas especiales */
@@ -99,10 +100,6 @@ body {
 
 .cancel-screen .content {
     background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
-}
-
-.locked-screen .content {
-    background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%);
 }
 
 .no-screen .content {
@@ -158,10 +155,6 @@ h2 {
     }
 }
 
-.error-title {
-    color: #f44336;
-}
-
 .sad-title {
     color: #9C27B0;
 }
@@ -202,6 +195,13 @@ p {
     font-style: italic;
 }
 
+.hint-text {
+    font-size: 1em;
+    color: #888;
+    font-style: italic;
+    margin-top: 20px;
+}
+
 /* GIFs */
 .gif-container {
     margin-bottom: 30px;
@@ -222,27 +222,6 @@ p {
     }
     50% {
         transform: translateY(-15px);
-    }
-}
-
-.celebration-gif {
-    width: 250px;
-    height: 250px;
-    border-radius: 50%;
-    border: 5px solid white;
-    object-fit: cover;
-    animation: rotate 4s linear infinite;
-}
-
-@keyframes rotate {
-    0% {
-        transform: rotate(0deg) scale(1);
-    }
-    50% {
-        transform: rotate(180deg) scale(1.1);
-    }
-    100% {
-        transform: rotate(360deg) scale(1);
     }
 }
 
@@ -317,8 +296,24 @@ p {
     margin-top: 30px;
 }
 
+/* Contenedor para botones que se mueven */
+.moving-buttons-container {
+    position: relative;
+    min-height: 300px;
+    display: flex;
+    gap: 20px;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    margin-top: 30px;
+}
+
+.moving-btn {
+    transition: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+
 /* Cards de mensajes */
-.message-card, .sad-card, .warning-card {
+.message-card, .sad-card {
     background: rgba(255, 255, 255, 0.9);
     padding: 25px;
     border-radius: 20px;
@@ -326,7 +321,7 @@ p {
     box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
 }
 
-.message-card p, .sad-card p, .warning-card p {
+.message-card p, .sad-card p {
     margin: 12px 0;
     font-size: 1.1em;
     color: #333;
@@ -489,80 +484,6 @@ p {
     color: white;
 }
 
-/* Sección del cronómetro */
-.timer-section {
-    text-align: center;
-}
-
-.lock-message {
-    font-size: 1.4em;
-    color: #f44336;
-    font-weight: 600;
-    margin-bottom: 10px;
-}
-
-.lock-subtitle {
-    font-size: 1.1em;
-    color: #666;
-    margin-bottom: 25px;
-}
-
-.timer-container {
-    margin: 30px 0;
-}
-
-.timer-title {
-    font-size: 1.3em;
-    color: #667eea;
-    font-weight: 600;
-    margin-bottom: 20px;
-}
-
-.timer-display {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 10px;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    padding: 25px;
-    border-radius: 20px;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-    margin-bottom: 20px;
-}
-
-.time-box {
-    background: white;
-    padding: 15px;
-    border-radius: 12px;
-    min-width: 70px;
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-}
-
-.time-number {
-    font-size: 2em;
-    font-weight: 700;
-    color: #ff6b9d;
-    font-family: 'Courier New', monospace;
-    line-height: 1;
-}
-
-.time-label {
-    font-size: 0.75em;
-    color: #888;
-    margin-top: 5px;
-    font-weight: 600;
-    text-transform: uppercase;
-}
-
-.time-separator {
-    font-size: 2em;
-    color: white;
-    font-weight: bold;
-}
-
 /* Responsive */
 @media (max-width: 768px) {
     .content {
@@ -590,27 +511,9 @@ p {
         font-size: 1em;
     }
 
-    .cute-gif, .celebration-gif {
+    .cute-gif {
         width: 150px;
         height: 150px;
-    }
-
-    .time-box {
-        min-width: 55px;
-        padding: 10px;
-    }
-
-    .time-number {
-        font-size: 1.5em;
-    }
-
-    .time-separator {
-        font-size: 1.5em;
-    }
-
-    .timer-display {
-        gap: 5px;
-        padding: 15px;
     }
 
     .modal-content {
@@ -620,6 +523,10 @@ p {
     .hearts-container {
         font-size: 2em;
         gap: 10px;
+    }
+
+    .moving-buttons-container {
+        min-height: 250px;
     }
 }
 
@@ -638,6 +545,15 @@ p {
 
     .modal-btn {
         width: 100%;
+    }
+
+    .moving-buttons-container {
+        flex-direction: column;
+        min-height: 300px;
+    }
+
+    .moving-btn {
+        width: auto;
     }
 }
 
